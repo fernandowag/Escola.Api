@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Escola.Api.CrossCutting;
 using Escola.Api.Models;
 using Escola.Api.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -14,26 +15,52 @@ namespace Escola.Api.Controllers
     public class AlunoController : ControllerBase
     {
         IAlunoServices _alunoServices;
+        
         public AlunoController(IAlunoServices alunoServices)
         {
             _alunoServices = alunoServices;
         }
 
-        // Retorna todos os registros da tabela Alunos
-        // GET api/alunos
+        /// <summary>Retorna todos os registros da tabela Alunos</summary> 
+        /// <remarks>
+        ///     Descrção
+        ///         GET api/alunos
+        ///         Consulta a tabela alunos e retorna todos os registros.
+        /// 
+        /// </remarks>
         [HttpGet]
         public List<Aluno> GetAll()
         {
             return _alunoServices.GetAll();
         }
 
-        // Retorna um único registro cujo id corresponda ao passado como parâmetro
-        // GET api/alunos/1
+        /// <summary>Retorna um único registro cujo id corresponda ao passado como parâmetros</summary> 
+        /// <remarks>
+        /// Descrção
+        ///     GET api/alunos/{id}
+        ///     Retorna um único registro cujo id corresponda ao passado como parâmetro.
+        ///     
+        /// Exemplo
+        ///     1
+        /// </remarks>
         [Route("{id}")]
         [HttpGet]
-        public Aluno Get(int id)
+        [ProducesResponseType(typeof(Aluno),200)]
+        [ProducesResponseType(typeof(FrendlyException), 400)]
+        public object GetById(string id)
         {
-            return _alunoServices.Get(id);
+            try
+            {
+                int idConvertido = Int32.Parse(id);
+                return _alunoServices.Get(idConvertido);
+            }
+            catch 
+            {
+                //  ReturnResponse response = new ReturnResponse(e);
+                //  return response.Mensagem;
+                //throw new Exception("Houve um erro");
+                throw new FrendlyException("Houve um erro");
+            }
         }
 
         // Retorna todos os alunos cujo nome contenha a string passada como parâmetro
