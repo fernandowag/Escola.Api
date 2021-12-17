@@ -1,6 +1,8 @@
-﻿using Escola.Api.Models;
+﻿using Escola.Api.DataTransferObjects;
+using Escola.Api.Models;
 using Escola.Api.Repositories.Interfaces;
 using Escola.Api.Services.Interfaces;
+using System;
 using System.Collections.Generic;
 
 namespace Escola.Api.Services
@@ -30,6 +32,14 @@ namespace Escola.Api.Services
             return _alunoRepository.Get(nome);
         }
 
+        public void Post(AlunoRequest alunoRequest)
+        {
 
+            if (alunoRequest.NomeDoAluno == null)
+                throw new Exception("O nome do aluno não pode ser vazio");
+
+            Aluno aluno = new Aluno() { Nome = alunoRequest.NomeDoAluno };
+            _alunoRepository.Post(aluno);
+        }
     }
 }

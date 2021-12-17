@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Escola.Api.CrossCutting;
+using Escola.Api.DataTransferObjects;
 using Escola.Api.Models;
 using Escola.Api.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -70,6 +71,13 @@ namespace Escola.Api.Controllers
         public List<Aluno> Get(string nome)
         {
             return _alunoServices.Get(nome);
+        }
+
+        [HttpPost]
+        public IActionResult Post(AlunoRequest aluno)
+        {
+            _alunoServices.Post(aluno);
+            return Created("alunos", aluno);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Escola.Api.Models;
+﻿using Escola.Api.DataTransferObjects;
+using Escola.Api.Models;
 using Escola.Api.Repositories.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,5 +31,10 @@ namespace Escola.Api.Repositories
             return _context.Alunos.Where(a => a.Nome.Contains(nome)).ToList();
         }
 
+        public void Post(Aluno aluno)
+        {
+            _context.Alunos.Add(aluno);
+            _context.SaveChanges();
+        }
     }
 }

@@ -1,8 +1,6 @@
-﻿using Escola.Api.Models;
-using System;
+﻿using Escola.Api.DataTransferObjects;
+using Escola.Api.Models;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Escola.Api.Services.Interfaces
 {
@@ -11,5 +9,6 @@ namespace Escola.Api.Services.Interfaces
         List<Aluno> GetAll();
         Aluno Get(int id);
         List<Aluno> Get(string nome);
+        void Post(AlunoRequest aluno);
     }
 }

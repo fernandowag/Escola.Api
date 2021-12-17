@@ -2,6 +2,8 @@ using Escola.Api.Repositories;
 using Escola.Api.Repositories.Interfaces;
 using Escola.Api.Services;
 using Escola.Api.Services.Interfaces;
+using Escola.Api.Validators;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -26,9 +28,11 @@ namespace Escola.Api
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers();
+            services.AddControllers()
+                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<AlunoResquestValidator>());
+       
 
-            services.AddDbContext<Context>(options =>
+        services.AddDbContext<Context>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
 
@@ -45,6 +49,8 @@ namespace Escola.Api
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
+
+
 
         }
 
