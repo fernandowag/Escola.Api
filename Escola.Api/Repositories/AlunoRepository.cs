@@ -1,8 +1,10 @@
-﻿using Escola.Api.DataTransferObjects;
+﻿using Escola.Api.CrossCutting.Exceptions;
+using Escola.Api.DataTransferObjects;
 using Escola.Api.Models;
 using Escola.Api.Repositories.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Escola.Api.Repositories
 {
@@ -21,9 +23,12 @@ namespace Escola.Api.Repositories
             return _context.Alunos.ToList();
         }
 
-        public Aluno Get(int id)
+        public Task<Aluno> Get(int id)
         {
-            return _context.Alunos.Where(a => a.Id == id).FirstOrDefault();
+            var result = _context.Alunos.Where(a => a.Id == id).FirstOrDefault();
+            if (result == null)
+                throw new NotFoundException(UserFrendlyCodes.NotFound, "ID", id);
+            return Task.FromResult(result);
         }
 
         public List<Aluno> Get(string nome)

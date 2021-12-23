@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Escola.Api.CrossCutting;
+using Escola.Api.CrossCutting.Exceptions;
 using Escola.Api.DataTransferObjects;
 using Escola.Api.Models;
 using Escola.Api.Services.Interfaces;
@@ -11,8 +13,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Escola.Api.Controllers
 {
+    [ApiVersion("1")]
+    [Route("api/v{version:apiVersion}/alunos")]
     [ApiController]
-    [Route("api/alunos")]
     public class AlunoController : ControllerBase
     {
         IAlunoServices _alunoServices;
@@ -46,21 +49,17 @@ namespace Escola.Api.Controllers
         /// </remarks>
         [Route("{id}")]
         [HttpGet]
-        [ProducesResponseType(typeof(Aluno),200)]
-        [ProducesResponseType(typeof(FrendlyException), 400)]
-        public object GetById(string id)
+        [ProducesResponseType(typeof(Aluno),200)] 
+        public async Task<IActionResult> GetById(int id)
         {
             try
             {
-                int idConvertido = Int32.Parse(id);
-                return _alunoServices.Get(idConvertido);
+                var result = await _alunoServices.GetById(id);
+                return this.Ok(result);
             }
-            catch 
+            catch(Exception e)
             {
-                //  ReturnResponse response = new ReturnResponse(e);
-                //  return response.Mensagem;
-                //throw new Exception("Houve um erro");
-                throw new FrendlyException("Houve um erro");
+                return ExceptionHandler.GetErrorResponse(e);
             }
         }
 
@@ -68,7 +67,7 @@ namespace Escola.Api.Controllers
         // GET api/alunos/filtro?nome=Francisco
         [Route("filtro")]
         [HttpGet]
-        public List<Aluno> Get(string nome)
+        public List<Aluno> Get([FromQuery]string nome)
         {
             return _alunoServices.Get(nome);
         }

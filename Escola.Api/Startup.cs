@@ -6,6 +6,7 @@ using Escola.Api.Validators;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,9 +31,17 @@ namespace Escola.Api
 
             services.AddControllers()
                  .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<AlunoResquestValidator>());
-       
+            
+            services.AddApiVersioning();
 
-        services.AddDbContext<Context>(options =>
+            services.AddApiVersioning(config =>
+            {
+                config.AssumeDefaultVersionWhenUnspecified = true;
+                config.DefaultApiVersion = new ApiVersion(1, 0);
+                config.ReportApiVersions = true;
+            });
+
+            services.AddDbContext<Context>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
 

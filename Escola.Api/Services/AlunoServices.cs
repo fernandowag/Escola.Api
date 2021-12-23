@@ -1,9 +1,13 @@
-﻿using Escola.Api.DataTransferObjects;
+﻿using Escola.Api.CrossCutting;
+using Escola.Api.CrossCutting.Exceptions;
+using Escola.Api.DataTransferObjects;
 using Escola.Api.Models;
 using Escola.Api.Repositories.Interfaces;
 using Escola.Api.Services.Interfaces;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Escola.Api.Services
 {
@@ -22,9 +26,9 @@ namespace Escola.Api.Services
              return _alunoRepository.GetAll();
         }
 
-        public Aluno Get(int id)
+        public async Task<Aluno> GetById(int id)
         {
-            return _alunoRepository.Get(id);
+                return await _alunoRepository.Get(id);
         }
 
         public List<Aluno> Get(string nome)
