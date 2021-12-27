@@ -19,6 +19,16 @@ namespace Escola.Api.Repositories
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Aluno>(entity => entity.HasKey( e => new { e.Id }));
+
+            modelBuilder.Entity<Aluno>();
+ //  .HasMany(b => b.Enderecos)
+ //  .WithMany(c => c.Alunos)
+ //  .LeftNavigation.
+ //  L
+ //
+ //      cs.MapRightKey("CategoryId");
+ //      cs.ToTable("BookCategories");
+ //  });
         }
     }
 }

@@ -49,13 +49,14 @@ namespace Escola.Api.Controllers
         /// </remarks>
         [Route("{id}")]
         [HttpGet]
-        [ProducesResponseType(typeof(Aluno),200)] 
+        [ProducesResponseType(typeof(Aluno),200)]
+        [ProducesResponseType(typeof(ErrorResponse), 200)]
         public async Task<IActionResult> GetById(int id)
         {
             try
             {
                 var result = await _alunoServices.GetById(id);
-                return this.Ok(result);
+                return this.Ok(result); 
             }
             catch(Exception e)
             {
