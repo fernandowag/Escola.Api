@@ -18,9 +18,11 @@ namespace Escola.Api.Repositories
         {
             _context = context;
         }
-        public List<Aluno> GetAll()
+
+        public async Task<IEnumerable<Aluno>> GetAll()
         {
-            return _context.Alunos.ToList();
+            var result = _context.Alunos.AsEnumerable();
+            return await Task.FromResult(result);
         }
 
         public Task<Aluno> Get(int id)
@@ -31,15 +33,39 @@ namespace Escola.Api.Repositories
             return Task.FromResult(result);
         }
 
-        public List<Aluno> Get(string nome)
+        public async Task<IEnumerable<Aluno>> GetByName(string nome)
         {
-            return _context.Alunos.Where(a => a.Nome.Contains(nome)).ToList();
+            var result =  _context.Alunos.Where(a => a.Nome.Contains(nome)).ToList();
+            return await Task.FromResult(result);
         }
 
-        public void Post(Aluno aluno)
+        public async Task PostAsync(Aluno aluno)
         {
-            _context.Alunos.Add(aluno);
+            await _context.Alunos.AddAsync(aluno);
+            await _context.SaveChangesAsync();
+        }
+        public async Task UpdateNotaGeral(int id, float notaGeral)
+        {
+            var aluno = await _context.Alunos.FindAsync(id);
+            aluno.NotaGeral = notaGeral;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task Update(int id, AlunoRequest alunoRequest)
+        {
+            var aluno = await _context.Alunos.FindAsync(id);
+            aluno.Nome = alunoRequest.Nome;
+            aluno.DataDeNascimento = alunoRequest.DataDeNascimento;
+            aluno.TurmaId = alunoRequest.TurmaId;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task Delete(int id)
+        {
+            var aluno = await _context.Alunos.FindAsync(id);
+            _context.Alunos.Remove(aluno);
             _context.SaveChanges();
+
         }
     }
 }

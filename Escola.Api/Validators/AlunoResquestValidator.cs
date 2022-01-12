@@ -1,6 +1,6 @@
 ﻿using Escola.Api.DataTransferObjects;
 using FluentValidation;
-using System.Linq;
+using System;
 
 namespace Escola.Api.Validators
 {
@@ -8,17 +8,11 @@ namespace Escola.Api.Validators
     {
         public AlunoResquestValidator()
         {
-            RuleFor(x => x.NomeDoAluno).NotEmpty()
+            RuleFor(x => x.Nome).NotEmpty()
                 .WithMessage("O nome do aluno não pode ser vazio");
-            RuleFor(x => x.Idade).GreaterThan(10);
-            RuleFor(x => x.Turno)
-                .Must(TurnoValido).WithMessage("Turno deve ser 'Manhã' ou 'Tarde'");
-        }
-
-        public bool TurnoValido(string turno)
-        {
-            return new string[] { "manhã", "tarde" }.Contains(turno) ? true : false;
-
+            RuleFor(x => x.DataDeNascimento).NotEmpty().GreaterThan(DateTime.Now.AddYears(-100))
+                .WithMessage("Data de nascimento invalida");
+            RuleFor(x => x.TurmaId).NotEmpty().GreaterThan(0);
         }
 
     }

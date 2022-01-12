@@ -1,3 +1,5 @@
+using AutoMapper;
+using Escola.Api.Mappers;
 using Escola.Api.Repositories;
 using Escola.Api.Repositories.Interfaces;
 using Escola.Api.Services;
@@ -29,9 +31,12 @@ namespace Escola.Api
         public void ConfigureServices(IServiceCollection services)
         {
 
+            
             services.AddControllers()
+            //FluentValidation
                  .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<AlunoResquestValidator>());
             
+            //Versionamento
             services.AddApiVersioning();
 
             services.AddApiVersioning(config =>
@@ -41,13 +46,30 @@ namespace Escola.Api
                 config.ReportApiVersions = true;
             });
 
+            //Contexto Entity Framework
             services.AddDbContext<Context>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddTransient<IAlunoRepository, AlunoRepository>();
-            services.AddTransient<IAlunoServices, AlunoServices>();
+            //Mapper
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new AlunoProfile());
+                mc.AddProfile(new TurmaProfile());
+            });
 
+            IMapper mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
+
+            //Injeção de dependencia
+            services.AddMvc();
+            services.AddTransient<IAlunoRepository, AlunoRepository>();
+            services.AddTransient<ITurmaRepository, TurmaRepository>();
+
+            services.AddTransient<IAlunoServices, AlunoServices>();
+            services.AddTransient<ITurmaService, TurmaService>();
+
+            //swagger
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo()

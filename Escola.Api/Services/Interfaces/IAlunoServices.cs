@@ -1,5 +1,4 @@
 ﻿using Escola.Api.DataTransferObjects;
-using Escola.Api.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -7,9 +6,13 @@ namespace Escola.Api.Services.Interfaces
 {
     public interface IAlunoServices
     {
-        List<Aluno> GetAll();
-        Task<Aluno> GetById(int id);
-        List<Aluno> Get(string nome);
-        void Post(AlunoRequest aluno);
+        Task<IEnumerable<AlunoResponse>> GetAll();
+        Task<AlunoResponse> GetById(int id);
+        Task<IEnumerable<AlunoResponse>> GetByName(string nome);
+        Task PostAsync(AlunoRequest aluno);
+        Task UpdateNotaGeral(int id, float notaGeral);
+        Task Update(int id, AlunoRequest aluno);
+        Task Delete(int id);
+
     }
 }

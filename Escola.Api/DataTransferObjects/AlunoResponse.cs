@@ -2,10 +2,12 @@
 
 namespace Escola.Api.DataTransferObjects
 {
-    public class AlunoRequest
+    public class AlunoResponse
     {
         public string Nome { get; set; }
         public DateTime DataDeNascimento { get; set; }
-        public int TurmaId { get; set; }
+        public float NotaGeral { get; set; }
+        public bool Aprovado { get; set; }
+
     }
 }

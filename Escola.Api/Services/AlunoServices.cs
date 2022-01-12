@@ -1,49 +1,61 @@
-﻿using Escola.Api.CrossCutting;
-using Escola.Api.CrossCutting.Exceptions;
+﻿using AutoMapper;
 using Escola.Api.DataTransferObjects;
 using Escola.Api.Models;
 using Escola.Api.Repositories.Interfaces;
 using Escola.Api.Services.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Escola.Api.Services
 {
-    
+
     public class AlunoServices : IAlunoServices
     {
         IAlunoRepository _alunoRepository;
+        IMapper _mapper;
 
-        public AlunoServices(IAlunoRepository alunoRepository)
+        public AlunoServices(IAlunoRepository alunoRepository, IMapper mapper)
         {
             _alunoRepository = alunoRepository;
+            _mapper = mapper;
         }
 
-        public List<Aluno> GetAll()
+        public async Task<IEnumerable<AlunoResponse>> GetAll()
         {
-             return _alunoRepository.GetAll();
+            var alunos = await _alunoRepository.GetAll();
+            return _mapper.Map<IEnumerable<AlunoResponse>>(alunos);
         }
 
-        public async Task<Aluno> GetById(int id)
+        public async Task<AlunoResponse> GetById(int id)
         {
-                return await _alunoRepository.Get(id);
+            var aluno = await _alunoRepository.Get(id);
+            return _mapper.Map<AlunoResponse>(aluno);
         }
 
-        public List<Aluno> Get(string nome)
+        public async Task<IEnumerable<AlunoResponse>> GetByName(string nome)
         {
-            return _alunoRepository.Get(nome);
+            var alunos = await _alunoRepository.GetByName(nome);
+            return _mapper.Map<IEnumerable<AlunoResponse>>(alunos);
         }
 
-        public void Post(AlunoRequest alunoRequest)
+        public async Task PostAsync(AlunoRequest aluno)
         {
+            await _alunoRepository.PostAsync(_mapper.Map<Aluno>(aluno));
+        }
 
-            if (alunoRequest.NomeDoAluno == null)
-                throw new Exception("O nome do aluno não pode ser vazio");
+        public async Task UpdateNotaGeral(int id, float notaGeral)
+        {
+            await _alunoRepository.UpdateNotaGeral(id, notaGeral);
+        }
 
-            Aluno aluno = new Aluno() { Nome = alunoRequest.NomeDoAluno };
-            _alunoRepository.Post(aluno);
+        public async Task Update(int id, AlunoRequest aluno)
+        {
+            await _alunoRepository.Update(id, aluno);
+        }
+
+        public async Task Delete(int id)
+        {
+            await _alunoRepository.Delete(id);
         }
     }
 }

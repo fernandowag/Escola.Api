@@ -7,9 +7,12 @@ namespace Escola.Api.Repositories.Interfaces
 {
     public interface IAlunoRepository
     {
-        List<Aluno> GetAll();
+        Task<IEnumerable<Aluno>> GetAll();
         Task<Aluno> Get(int id);
-        List<Aluno> Get(string nome);
-        void Post(Aluno aluno);
+        Task<IEnumerable<Aluno>> GetByName(string nome);
+        Task PostAsync(Aluno aluno);
+        Task UpdateNotaGeral(int id, float notaGeral);
+        Task Update(int id, AlunoRequest aluno);
+        Task Delete(int id);
     }
 }
